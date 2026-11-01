@@ -1,0 +1,154 @@
+import java.util.Random;
+
+public class WorldGenBigMushroom extends WorldGenerator {
+   private int a = -1;
+
+   public WorldGenBigMushroom(int par1) {
+      super(true);
+      this.a = par1;
+   }
+
+   public WorldGenBigMushroom() {
+      super(false);
+   }
+
+   @Override
+   public boolean generate(World par1World, Random par2Random, long par3, int par4, long par5) {
+      int i = par2Random.nextInt(2);
+      if (this.a >= 0) {
+         i = this.a;
+      }
+
+      int j = par2Random.nextInt(3) + 4;
+      boolean flag = true;
+      if (par4 >= 1 && par4 + j + 1 < 256) {
+         for (int k = par4; k <= par4 + 1 + j; k++) {
+            byte byte0 = 3;
+            if (k == par4) {
+               byte0 = 0;
+            }
+
+            for (long j1 = par3 - byte0; j1 <= par3 + byte0 && flag; j1++) {
+               for (long i2 = par5 - byte0; i2 <= par5 + byte0 && flag; i2++) {
+                  if (k >= 0 && k < 256) {
+                     int l2 = par1World.getBlockId(j1, k, i2);
+                     if (l2 != 0 && l2 != Block.K.bO) {
+                        flag = false;
+                     }
+                  } else {
+                     flag = false;
+                  }
+               }
+            }
+         }
+
+         if (!flag) {
+            return false;
+         }
+
+         int l = par1World.getBlockId(par3, par4 - 1, par5);
+         if (l != Block.v.bO && l != Block.u.bO && l != Block.by.bO) {
+            return false;
+         }
+
+         if (!Block.TileEntityMobSpawnerRenderer.canPlaceBlockAt(par1World, par3, par4, par5)) {
+            return false;
+         }
+
+         this.setBlockAndMetadata(par1World, par3, par4 - 1, par5, Block.v.bO, 0);
+         int i1 = par4 + j;
+         if (i == 1) {
+            i1 = par4 + j - 3;
+         }
+
+         for (int k1 = i1; k1 <= par4 + j; k1++) {
+            int j2 = 1;
+            if (k1 < par4 + j) {
+               j2++;
+            }
+
+            if (i == 0) {
+               j2 = 3;
+            }
+
+            for (long i3 = par3 - j2; i3 <= par3 + j2; i3++) {
+               for (long j3 = par5 - j2; j3 <= par5 + j2; j3++) {
+                  int k3 = 5;
+                  if (i3 == par3 - j2) {
+                     k3--;
+                  }
+
+                  if (i3 == par3 + j2) {
+                     k3++;
+                  }
+
+                  if (j3 == par5 - j2) {
+                     k3 -= 3;
+                  }
+
+                  if (j3 == par5 + j2) {
+                     k3 += 3;
+                  }
+
+                  if (i == 0 || k1 < par4 + j) {
+                     if ((i3 == par3 - j2 || i3 == par3 + j2) && (j3 == par5 - j2 || j3 == par5 + j2)) {
+                        continue;
+                     }
+
+                     if (i3 == par3 - (j2 - 1) && j3 == par5 - j2) {
+                        k3 = 1;
+                     }
+
+                     if (i3 == par3 - j2 && j3 == par5 - (j2 - 1)) {
+                        k3 = 1;
+                     }
+
+                     if (i3 == par3 + (j2 - 1) && j3 == par5 - j2) {
+                        k3 = 3;
+                     }
+
+                     if (i3 == par3 + j2 && j3 == par5 - (j2 - 1)) {
+                        k3 = 3;
+                     }
+
+                     if (i3 == par3 - (j2 - 1) && j3 == par5 + j2) {
+                        k3 = 7;
+                     }
+
+                     if (i3 == par3 - j2 && j3 == par5 + (j2 - 1)) {
+                        k3 = 7;
+                     }
+
+                     if (i3 == par3 + (j2 - 1) && j3 == par5 + j2) {
+                        k3 = 9;
+                     }
+
+                     if (i3 == par3 + j2 && j3 == par5 + (j2 - 1)) {
+                        k3 = 9;
+                     }
+                  }
+
+                  if (k3 == 5 && k1 < par4 + j) {
+                     k3 = 0;
+                  }
+
+                  if ((k3 != 0 || par4 >= par4 + j - 1) && !Block.n[par1World.getBlockId(i3, k1, j3)]) {
+                     this.setBlockAndMetadata(par1World, i3, k1, j3, Block.BiomeGenJungle.bO + i, k3);
+                  }
+               }
+            }
+         }
+
+         for (int l1 = 0; l1 < j; l1++) {
+            int k2 = par1World.getBlockId(par3, par4 + l1, par5);
+            if (!Block.n[k2]) {
+               this.setBlockAndMetadata(par1World, par3, par4 + l1, par5, Block.BiomeGenJungle.bO + i, 10);
+            }
+         }
+
+         return true;
+      } else {
+         return false;
+      }
+   }
+}
