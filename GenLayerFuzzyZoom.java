@@ -1,0 +1,59 @@
+public class GenLayerFuzzyZoom extends GenLayer {
+   public GenLayerFuzzyZoom(long par1, GenLayer par3GenLayer) {
+      super(par1);
+      super.a = par3GenLayer;
+   }
+
+   @Override
+   public int[] getInts(long par1, long par2, int par3, int par4) {
+      long i = par1 >> 1;
+      long j = par2 >> 1;
+      int k = (par3 >> 1) + 3;
+      int l = (par4 >> 1) + 3;
+      int[] ai = this.a.getInts(i, j, k, l);
+      int[] ai1 = ad.a(k * 2 * l * 2);
+      int i1 = k << 1;
+
+      for (int j1 = 0; j1 < l - 1; j1++) {
+         int k1 = j1 << 1;
+         int i2 = k1 * i1;
+         int j2 = ai[0 + (j1 + 0) * k];
+         int k2 = ai[0 + (j1 + 1) * k];
+
+         for (int l2 = 0; l2 < k - 1; l2++) {
+            this.a(l2 + i << 1, j1 + j << 1);
+            int i3 = ai[l2 + 1 + (j1 + 0) * k];
+            int j3 = ai[l2 + 1 + (j1 + 1) * k];
+            ai1[i2] = j2;
+            ai1[i2++ + i1] = this.a(j2, k2);
+            ai1[i2] = this.a(j2, i3);
+            ai1[i2++ + i1] = this.b(j2, i3, k2, j3);
+            j2 = i3;
+            k2 = j3;
+         }
+      }
+
+      int[] ai2 = ad.a(par3 * par4);
+
+      for (int l1 = 0; l1 < par4; l1++) {
+         System.arraycopy(ai1, (l1 + (int)(par2 & 1L)) * (k << 1) + (int)(par1 & 1L), ai2, l1 * par3, par3);
+      }
+
+      return ai2;
+   }
+
+   protected int a(int par1, int par2) {
+      return this.a(2) != 0 ? par2 : par1;
+   }
+
+   protected int b(int par1, int par2, int par3, int par4) {
+      int i = this.a(4);
+      if (i == 0) {
+         return par1;
+      } else if (i == 1) {
+         return par2;
+      } else {
+         return i == 2 ? par3 : par4;
+      }
+   }
+}
